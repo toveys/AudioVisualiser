@@ -141,7 +141,7 @@ class Bar{
             ctx2.rotate(this.index*Math.PI*10/bufferLength);
             let hue2 = this.index*.6;
             ctx2.fillStyle = 'hsla('+hue2+',100%, 50%,'+.9+')';
-            ctx2.fillRect(0, 0, 15, this.height);
+            ctx2.fillRect(0, 0, 15, this.height*.9);
             ctx2.restore();
         }
         
@@ -149,7 +149,7 @@ class Bar{
             // // Main Visualiser #2 - rainbow parrot
             ctx2.save();
             ctx2.translate(canvas.width/2, canvas.height/2);
-            ctx2.rotate(this.index * 4.18);
+            ctx2.rotate(this.index * 4.196);
             let hue2 = 10+this.index*1.2;  
             ctx2.fillStyle = 'hsl('+hue2+',100%, 50%)';
             ctx2.beginPath();
