@@ -30,11 +30,11 @@ file.addEventListener('change', function(){
     controls.src = URL.createObjectURL(files[0]);
     controls.load();
     controls.play();
-    rdm = Math.floor(Math.random()*3);
 });
 
 //continue animation after pressing play
 controls.addEventListener('play', function(){
+    rdm = Math.floor(Math.random()*3);
     //clean up audioContext just in case its still using previous resources
     audioContext.close();
     //connect a buch of audio stuff up
@@ -50,7 +50,7 @@ controls.addEventListener('play', function(){
     const dataArray = new Uint8Array(bufferLength);
 
     let angle = 0;
-    drawVisualiser(bufferLength, rdm);
+    drawVisualiser(bufferLength);
     //recursive animate function, calls itself and uses the bar objects draw and update methods to
     //animate the canvas
     function animate(){
@@ -68,7 +68,7 @@ controls.addEventListener('play', function(){
         //for each bar object in my bars array I call their update and draw method
         bars.forEach(function(bar,i){
             bar.update(dataArray[i]);
-            bar.draw(ctx, ctx2, bufferLength);
+            bar.draw(ctx, ctx2, bufferLength, rdm);
         });
         ctx.restore();
 
@@ -93,14 +93,13 @@ controls.addEventListener('play', function(){
 
 //Bar Class
 class Bar{
-    constructor(x, y, width, height, hue, index, rdm){
+    constructor(x, y, width, height, hue, index){
         this.x = x; 
         this.y = y;
         this.width = width;
         this.height=height;
         this.hue = hue;
         this.index = index;
-        this.rdm = rdm;
     }
     //TEMPLATE
     // for(let i=0; i<bufferLength; i++){
@@ -117,8 +116,8 @@ class Bar{
     update(sample){
         this.height = sample*1.3;
     }
-    draw(ctx, ctx2, bufferLength){
-        //Background
+    draw(ctx, ctx2, bufferLength, rdm){
+        // //Background
         ctx.save();
         // set centerpoint of the canvas to the center of the canvas
         ctx.translate(0, 0);
@@ -132,7 +131,7 @@ class Bar{
         ctx.stroke();
         ctx.restore();
         
-        if(this.rdm==0){
+        if(rdm==0){
             // Main Visualiser #1 - Heat Map
             ctx2.save();
             ctx2.translate(canvas.width/2, canvas.height/2)
@@ -145,8 +144,8 @@ class Bar{
             ctx2.restore();
         }
         
-        if(this.rdm==1){
-            // // Main Visualiser #2 - rainbow parrot
+        if(rdm==1){
+            // Main Visualiser #2 - rainbow parrot
             ctx2.save();
             ctx2.translate(canvas.width/2, canvas.height/2);
             ctx2.rotate(this.index * 4.196);
@@ -158,10 +157,9 @@ class Bar{
             ctx2.stroke();
             ctx2.restore();
         }
-        if(this.rdm==2){
+        if(rdm==2){
             //Main Visualiser #3 - mushrooms
             ctx2.save();
-            //ctx2.globalCompositeOperation = 'hard-light';
             ctx2.translate(canvas.width/2, canvas.height/2);
             ctx2.rotate(this.index * Math.PI*15/bufferLength);
             let hue2 = 300-(this.height+(this.index*.5));  
@@ -188,9 +186,9 @@ class Bar{
 //C:\Users\tovey\Documents\CreativeCoding
 
 //create the bar objects
-function drawVisualiser(bufferLength, rdm){
+function drawVisualiser(bufferLength){
     for(i=0; i < bufferLength; i++){
         let hue = 'hsl('+200+(i*.2)+',100%, 50%)';
-        bars.push(new Bar(i,canvas.height/2,1,20,hue,i,rdm));
+        bars.push(new Bar(i,canvas.height/2,1,20,hue,i));
     }
 }
